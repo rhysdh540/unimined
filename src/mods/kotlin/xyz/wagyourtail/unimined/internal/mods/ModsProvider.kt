@@ -8,6 +8,7 @@ import xyz.wagyourtail.unimined.api.minecraft.MinecraftConfig
 import xyz.wagyourtail.unimined.api.mod.ModRemapConfig
 import xyz.wagyourtail.unimined.api.mod.ModsConfig
 import xyz.wagyourtail.unimined.api.unimined
+import xyz.wagyourtail.unimined.internal.mods.task.GenModSourcesTaskImpl
 import xyz.wagyourtail.unimined.util.FinalizeOnRead
 import xyz.wagyourtail.unimined.util.defaultedMapOf
 import xyz.wagyourtail.unimined.util.getField
@@ -83,6 +84,11 @@ class ModsProvider(val project: Project, val minecraft: MinecraftConfig) : ModsC
             }
             remapSettings.action()
             remapSettings.doRemap()
+        }
+
+        project.tasks.register("genModSources".withSourceSet(minecraft.sourceSet), GenModSourcesTaskImpl::class.java, this).configure {
+            it.group = "unimined"
+            it.description = "Generates sources for mods in the ${minecraft.sourceSet} source set"
         }
     }
 
